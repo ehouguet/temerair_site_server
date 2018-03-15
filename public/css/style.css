@@ -1,0 +1,139 @@
+body {
+	background-color: gray;	
+	margin: 0;
+}
+
+/****************************/
+/* gestion titre            */
+/****************************/
+h1 {
+	font-size:36px;
+	font-weight:normal;
+	text-transform:uppercase;
+	padding-left:10%;
+	margin-bottom:1%;
+	padding:5px 0px 5px 5px;
+	border-bottom: 1px solid black;
+}
+#joueur {
+	border: 2px outset;
+	float:right;
+}#joueur:first-child{
+	margin-left: 5px;
+	margin-right: 2px;
+}.j1color{
+	background-color: rgb(255,144,0);
+}.j2color{
+	background-color: rgb(255,0,0);
+}
+
+/****************************/
+/* gestion image            */
+/****************************/
+img {
+	width: 90%;
+}
+
+/****************************/
+/* mise en forme du tableau */
+/****************************/
+td {
+    border: 1px solid black;
+}
+table {
+	border-collapse: collapse;
+    border: 2px solid black;
+}
+
+/* mise specifique au plateau */
+.plateau {
+	display: inline-block;
+	vertical-align: top;
+
+	height: 40vw;
+}.plateau table {
+	width: 100%;
+	height: 100%;
+}.plateau tr {
+	text-align: center;
+	height: 12.5%;
+}
+.ta {
+	width: 10%;
+}.ta_left {
+	margin-left: 2%;
+	margin-right: 2%;
+}.ta_right {
+	margin-left: 2%;
+	margin-right: 2%;
+}.ta td {
+	padding: auto;
+	width: 50%;
+}
+.tt, .tm {
+	width: 20%;
+	height: 40vw;
+	margin-top: 2%;
+	margin-right: 0%;
+	margin-left: 0%;
+}
+.tt td, .tm td {
+	width: 25%;
+}
+
+.tt td:nth-child(2), .tm td:nth-child(2) {
+    border-right: 2px solid black;
+}
+
+/* colorisaton */
+.ta tr:nth-child(2n) td:nth-child(2n),
+.ta tr:nth-child(2n+1) td:nth-child(2n+1) {
+	background-color: #DDDDDD;
+}
+.ta tr:nth-child(2n) td:nth-child(2n+1),
+.ta tr:nth-child(2n+1) td:nth-child(2n) {
+	background-color: #BBBBBB;
+}
+
+.tt tr:nth-child(2n) td:nth-child(2n),
+.tt tr:nth-child(2n+1) td:nth-child(2n+1) {
+	background-color: #DDFFDD;
+}
+.tt tr:nth-child(2n) td:nth-child(2n+1),
+.tt tr:nth-child(2n+1) td:nth-child(2n) {
+	background-color: #BBFFBB;
+}
+
+.tm tr:nth-child(2n) td:nth-child(2n),
+.tm tr:nth-child(2n+1) td:nth-child(2n+1) {
+	background-color: #DDDDFF;
+}
+.tm tr:nth-child(2n) td:nth-child(2n+1),
+.tm tr:nth-child(2n+1) td:nth-child(2n) {
+	background-color: #BBBBFF;
+}
+
+/****************************/
+/* recrutement              */
+/****************************/
+
+.recrutement {
+	display: inline-block;
+	vertical-align: top;
+
+	background-color: #EEEEEE;
+	text-align: center;
+
+	width: 8%;
+	margin-left: 1%;
+	margin-right: 1%;
+}.recrutement table {
+	margin-right: auto;
+	margin-left: auto;
+	width: 100%;
+}.recrutement tr {
+	width: 8%;
+}.recrutement td {
+	width: 50%;
+	text-align: center;
+}
