@@ -7,7 +7,9 @@ Houguet.
 Ce site a pour but originel d'offrir une interface de test pour le jeu de société Téméraire.
 A partir de 2018 le site a commencé à avoir la vocation d'être en site en ligne.
 
-Si un développeur souhaite héberger Téméraire nous serions ravies sous réserve qu'il nous contact au préalable.   
+Si un développeur souhaite héberger Téméraire nous serions ravies sous réserve qu'il nous contact au préalable.
+à l'adresse suivante :
+elohoug@gmail.com
 
 ## pour lancer l'application:
 
