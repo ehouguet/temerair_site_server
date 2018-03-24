@@ -54,7 +54,7 @@ function PartieControlleur(j1Socket, J2Socket) {
   }
   function isNotMyTurn(joueurSocket, isJ1) {
     if (!J2Socket) return false;
-    if (plateauController.get_data().tour_j1 === isJ1) {
+    if (plateauController.get_data().isTurnOfP1 === isJ1) {
       return false;
     }
     console.log("ce n'est pas mon tour !");
