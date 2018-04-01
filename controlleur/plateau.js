@@ -143,9 +143,11 @@ function PlateauControlleur(sockets) {
     console.log("server.js => FTDDP: cell_dest:");
     console.log(cell_dest);
 
+    if (cell_ori.piece === null) return null;
+
     /* cas de piece de meme player */
     if (cell_dest.piece != null) {
-      if (cell_ori.piece.player == cell_dest.piece.player){
+      if (cell_ori.piece.player == cell_dest.piece.player) {
         console.log("server.js => FTDDP: piece du meme player");
         return;
       }
