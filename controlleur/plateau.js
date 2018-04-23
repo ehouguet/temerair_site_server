@@ -19,6 +19,8 @@ function PlateauControlleur(sockets) {
   //contien les donnees
   var data = get_data_default();
 
+  emit('partie:start');
+
   return instance;
 
 ////////////////////////////////////// methode //////////////////////////////////////
@@ -82,7 +84,7 @@ function PlateauControlleur(sockets) {
       return;
     }
 
-    cell_dest_recu.posY = cell_dest.posY+1;
+    cell_dest_recu.posY = cell_dest.posY;
     cell_dest_recu.posX = cell_dest.posX;
     var cell_tmp = get_cell_local(cell_dest_recu);
     if (cell_tmp != null) {
@@ -401,17 +403,17 @@ function PlateauControlleur(sockets) {
   }
 
   /* fonction de recuperation de la cellule local */
-  function get_cell_local(cell_recu) {
+  function get_cell_local(cellRecu) {
     var res;
-    switch (cell_recu.area) {
+    switch (cellRecu.area) {
       case "ta":
-        res = data.plateauAir[cell_recu.posY][cell_recu.posX];
+        res = data.plateauAir[cellRecu.posY][cellRecu.posX];
         break;
       case "tt":
-        res = data.plateauTerre[cell_recu.posY][cell_recu.posX];
+        res = data.plateauTerre[cellRecu.posY][cellRecu.posX];
         break;
       case "tm":
-        res = data.plateauMer[cell_recu.posY][cell_recu.posX-4];
+        res = data.plateauMer[cellRecu.posY][cellRecu.posX-4];
         break;
     }
     if (res == undefined) {
@@ -511,16 +513,28 @@ function PlateauControlleur(sockets) {
 
   function get_data_default() {
     return {
+      // air inversé
       plateauAir: [
-        [{area:"ta",posY:0,posX:0,piece:{player:"p1", type:"A_B"}}  , {area:"ta",posY:0,posX:1,piece:{player:"p1", type:"QG"}}   , {area:"ta",posY:0,posX:2,piece:{player:"p1", type:"dist"}} , {area:"ta",posY:0,posX:3,piece:{player:"p1", type:"A_A"}} ],
+        [{area:"ta",posY:0,posX:0,piece:{player:"p1", type:"A_A"}}  , {area:"ta",posY:0,posX:1,piece:{player:"p1", type:"dist"}}   , {area:"ta",posY:0,posX:2,piece:{player:"p1", type:"QG"}} , {area:"ta",posY:0,posX:3,piece:{player:"p1", type:"A_B"}} ],
         [{area:"ta",posY:1,posX:0,piece:{player:"p1", type:"pion"}} , {area:"ta",posY:1,posX:1,piece:{player:"p1", type:"pion"}} , {area:"ta",posY:1,posX:2,piece:{player:"p1", type:"pion"}} , {area:"ta",posY:1,posX:3,piece:{player:"p1", type:"pion"}}],
         [{area:"ta",posY:2,posX:0,piece:null}                       , {area:"ta",posY:2,posX:1,piece:null}                       , {area:"ta",posY:2,posX:2,piece:null}                       , {area:"ta",posY:2,posX:3,piece:null}                      ],
         [{area:"ta",posY:3,posX:0,piece:null}                       , {area:"ta",posY:3,posX:1,piece:null}                       , {area:"ta",posY:3,posX:2,piece:null}                       , {area:"ta",posY:3,posX:3,piece:null}                      ],
         [{area:"ta",posY:4,posX:0,piece:null}                       , {area:"ta",posY:4,posX:1,piece:null}                       , {area:"ta",posY:4,posX:2,piece:null}                       , {area:"ta",posY:4,posX:3,piece:null}                      ],
         [{area:"ta",posY:5,posX:0,piece:null}                       , {area:"ta",posY:5,posX:1,piece:null}                       , {area:"ta",posY:5,posX:2,piece:null}                       , {area:"ta",posY:5,posX:3,piece:null}                      ],
         [{area:"ta",posY:6,posX:0,piece:{player:"p2", type:"pion"}} , {area:"ta",posY:6,posX:1,piece:{player:"p2", type:"pion"}} , {area:"ta",posY:6,posX:2,piece:{player:"p2", type:"pion"}} , {area:"ta",posY:6,posX:3,piece:{player:"p2", type:"pion"}}],
-        [{area:"ta",posY:7,posX:0,piece:{player:"p2", type:"A_A"}}  , {area:"ta",posY:7,posX:1,piece:{player:"p2", type:"dist"}} , {area:"ta",posY:7,posX:2,piece:{player:"p2", type:"QG"}}   , {area:"ta",posY:7,posX:3,piece:{player:"p2", type:"A_B"}} ]
+        [{area:"ta",posY:7,posX:0,piece:{player:"p2", type:"A_B"}}  , {area:"ta",posY:7,posX:1,piece:{player:"p2", type:"QG"}} , {area:"ta",posY:7,posX:2,piece:{player:"p2", type:"dist"}}   , {area:"ta",posY:7,posX:3,piece:{player:"p2", type:"A_A"}} ]
       ],
+      // plateauAir: [
+      //   [{area:"ta",posY:0,posX:0,piece:{player:"p1", type:"A_B"}}  , {area:"ta",posY:0,posX:1,piece:{player:"p1", type:"QG"}}   , {area:"ta",posY:0,posX:2,piece:{player:"p1", type:"dist"}} , {area:"ta",posY:0,posX:3,piece:{player:"p1", type:"A_A"}} ],
+      //   [{area:"ta",posY:1,posX:0,piece:{player:"p1", type:"pion"}} , {area:"ta",posY:1,posX:1,piece:{player:"p1", type:"pion"}} , {area:"ta",posY:1,posX:2,piece:{player:"p1", type:"pion"}} , {area:"ta",posY:1,posX:3,piece:{player:"p1", type:"pion"}}],
+      //   [{area:"ta",posY:2,posX:0,piece:null}                       , {area:"ta",posY:2,posX:1,piece:null}                       , {area:"ta",posY:2,posX:2,piece:null}                       , {area:"ta",posY:2,posX:3,piece:null}                      ],
+      //   [{area:"ta",posY:3,posX:0,piece:null}                       , {area:"ta",posY:3,posX:1,piece:null}                       , {area:"ta",posY:3,posX:2,piece:null}                       , {area:"ta",posY:3,posX:3,piece:null}                      ],
+      //   [{area:"ta",posY:4,posX:0,piece:null}                       , {area:"ta",posY:4,posX:1,piece:null}                       , {area:"ta",posY:4,posX:2,piece:null}                       , {area:"ta",posY:4,posX:3,piece:null}                      ],
+      //   [{area:"ta",posY:5,posX:0,piece:null}                       , {area:"ta",posY:5,posX:1,piece:null}                       , {area:"ta",posY:5,posX:2,piece:null}                       , {area:"ta",posY:5,posX:3,piece:null}                      ],
+      //   [{area:"ta",posY:6,posX:0,piece:{player:"p2", type:"pion"}} , {area:"ta",posY:6,posX:1,piece:{player:"p2", type:"pion"}} , {area:"ta",posY:6,posX:2,piece:{player:"p2", type:"pion"}} , {area:"ta",posY:6,posX:3,piece:{player:"p2", type:"pion"}}],
+      //   [{area:"ta",posY:7,posX:0,piece:{player:"p2", type:"A_A"}}  , {area:"ta",posY:7,posX:1,piece:{player:"p2", type:"dist"}} , {area:"ta",posY:7,posX:2,piece:{player:"p2", type:"QG"}}   , {area:"ta",posY:7,posX:3,piece:{player:"p2", type:"A_B"}} ]
+      // ],
+
       plateauTerre: [
         [{area:"tt",posY:0,posX:0,piece:{player:"p1", type:"A_B"}}  , {area:"tt",posY:0,posX:1,piece:{player:"p1", type:"QG"}}   , {area:"tt",posY:0,posX:2,piece:{player:"p1", type:"dist"}} , {area:"tt",posY:0,posX:3,piece:{player:"p1", type:"A_A"}} ],
         [{area:"tt",posY:1,posX:0,piece:{player:"p1", type:"pion"}} , {area:"tt",posY:1,posX:1,piece:{player:"p1", type:"pion"}} , {area:"tt",posY:1,posX:2,piece:{player:"p1", type:"pion"}} , {area:"tt",posY:1,posX:3,piece:{player:"p1", type:"pion"}}],

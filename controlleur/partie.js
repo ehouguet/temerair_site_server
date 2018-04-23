@@ -7,14 +7,16 @@ module.exports = PartieControlleur;
 
 function PartieControlleur(j1Socket, J2Socket) {
 
-  console.log('PartieControlleur -> cree une partie.');
+  console.log('Partie -> cree une partie.');
 
   if (J2Socket) {
     var plateauController = PlateauControlleur([j1Socket, J2Socket]);
+    emit('partie:start');
     init_io_for_joueur(j1Socket, true);
     init_io_for_joueur(J2Socket, false);
   } else {
     var plateauController = PlateauControlleur([j1Socket]);
+    j1Socket.emit('partie:start');
     init_io_for_joueur(j1Socket, true);
   }
 
@@ -23,7 +25,7 @@ function PartieControlleur(j1Socket, J2Socket) {
 
   function init_io_for_joueur(joueurSocket, isJ1) {
 
-    console.log('PartieControlleur -> initialise un joueur.');
+    console.log('Partie -> initialise un joueur.');
 
     joueurSocket.emit('plateau:reset', plateauController.get_data());
     joueurSocket.on('plateau:action', function(cell_ori_recu, cell_dest_recu) {
