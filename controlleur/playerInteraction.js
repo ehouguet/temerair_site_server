@@ -13,10 +13,11 @@ function PlayerInteractionControlleur(server) {
   let playerAlone = null;
   
   const sio = io(server);
-  const players = [];
+  let players = [];
 
   sio.on('connection', function(socket) {
     let newPlayer = PlayerControlleur(socket);
+    newPlayer.state = PlayerControlleur.available;
     console.log('PlayerInteraction -> connection client ('+newPlayer.id+').');
     players.push(newPlayer);
     listenner(newPlayer);
@@ -29,9 +30,7 @@ function PlayerInteractionControlleur(server) {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   function listenner(player) {
     player.on('player:changeName', function(name) {
-      if (!player.name) {
-        players.push(player);
-      }
+      console.log(`PlayerInteraction -> player${player.id} change he name for ${name}.`);
       player.name = name;
       emitPlayer();
     });
@@ -44,15 +43,22 @@ function PlayerInteractionControlleur(server) {
   }
 
   function emitPlayer() {
+    let playerJson = players.map((player) => {
+      return {
+        name: player.name,
+        id: player.id,
+        state: player.state,
+      };
+    })
     players.forEach((player) => {
-      player.emit('players:update', players.map((player) => player.name || player.id));
+      player.emit('players:update', playerJson);
     })
   }
 
   function disconnect(oldPlayer) {
     oldPlayer.on('disconnect', function() {
       console.log('PlayerInteraction -> deconnection client ('+oldPlayer.id+').');
-      players.filter((player) => player.id != oldPlayer.id);
+      players = players.filter((player) => player.id != oldPlayer.id);
       emitPlayer();
     });
   }
@@ -67,8 +73,13 @@ function PlayerInteractionControlleur(server) {
       console.log("PlayerInteraction -> lancement d'une partie multi.");
       // initialise une nouvelle partie
       let plateauController = PartieControlleur(playerAlone, player);
+      player.state = PlayerControlleur.playing;
+      player.plateau = plateauController;
+      emitPlayer();
     } else {
       playerAlone = player;
+      player.state = PlayerControlleur.waiting;
+      emitPlayer();
     }
   };
   
@@ -78,6 +89,9 @@ function PlayerInteractionControlleur(server) {
   function addPlayerForLocalGame(player) {
     console.log("PlayerInteraction -> lancement d'une partie local.");
     let plateauController = PartieControlleur(player);
+    player.state = PlayerControlleur.playing;
+    player.plateau = plateauController;
+    emitPlayer();
   };
    
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////

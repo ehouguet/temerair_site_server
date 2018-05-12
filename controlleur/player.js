@@ -11,6 +11,7 @@ function PlayerControlleur(socket) {
         socket: socket,
         id: 'Anomyne' + currentId++,
         name: '',
+        state: '',
         emit(label, data) {
             socket.emit(label, data);
         },
@@ -19,3 +20,7 @@ function PlayerControlleur(socket) {
         },
     }
 }
+
+PlayerControlleur.playing = 'playing';
+PlayerControlleur.waiting = 'waiting';
+PlayerControlleur.available = 'available';
