@@ -73,9 +73,11 @@ function PlayerInteractionControlleur(server) {
       console.log("PlayerInteraction -> lancement d'une partie multi.");
       // initialise une nouvelle partie
       let plateauController = PartieControlleur(playerAlone, player);
+      playerAlone.state = PlayerControlleur.playing;
       player.state = PlayerControlleur.playing;
       player.plateau = plateauController;
       emitPlayer();
+      playerAlone = null;
     } else {
       playerAlone = player;
       player.state = PlayerControlleur.waiting;
