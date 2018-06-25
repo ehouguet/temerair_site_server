@@ -57,6 +57,13 @@ function PlayerInteractionControlleur(server) {
 
   function disconnect(oldPlayer) {
     oldPlayer.on('disconnect', function() {
+      if (oldPlayer.partie) {
+        let playersRemain = oldPlayer.partie.playerLeave(oldPlayer);
+        playersRemain.forEach((playerRemain) => {
+          playerRemain.state = PlayerControlleur.available;
+          playerRemain.plateau = null;
+        });
+      }
       console.log('PlayerInteraction -> deconnection client ('+oldPlayer.id+').');
       players = players.filter((player) => player.id != oldPlayer.id);
       emitPlayer();
@@ -72,10 +79,11 @@ function PlayerInteractionControlleur(server) {
     if (playerAlone) {
       console.log("PlayerInteraction -> lancement d'une partie multi.");
       // initialise une nouvelle partie
-      let plateauController = PartieControlleur(playerAlone, player);
+      let partieController = PartieControlleur(playerAlone, player);
       playerAlone.state = PlayerControlleur.playing;
+      playerAlone.plateau = partieController;
       player.state = PlayerControlleur.playing;
-      player.plateau = plateauController;
+      player.partie = partieController;
       emitPlayer();
       playerAlone = null;
     } else {
@@ -90,9 +98,9 @@ function PlayerInteractionControlleur(server) {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   function addPlayerForLocalGame(player) {
     console.log("PlayerInteraction -> lancement d'une partie local.");
-    let plateauController = PartieControlleur(player);
+    let partieController = PartieControlleur(player);
     player.state = PlayerControlleur.playing;
-    player.plateau = plateauController;
+    player.partie = partieController;
     emitPlayer();
   };
    

@@ -12,6 +12,7 @@ function PlayerControlleur(socket) {
         id: 'Anomyne' + currentId++,
         name: '',
         state: '',
+        plateau: null,
         emit(label, data) {
             socket.emit(label, data);
         },
