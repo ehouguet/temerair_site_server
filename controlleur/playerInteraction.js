@@ -40,6 +40,8 @@ function PlayerInteractionControlleur(server) {
     player.on('player:playMulti', function() {
       addPlayerForMultiGame(player);
     });
+    player.on('players:request', (playerRequested) => requestMatch(player, playerRequested));
+    
   }
 
   function emitPlayer() {
@@ -79,12 +81,7 @@ function PlayerInteractionControlleur(server) {
     if (playerAlone) {
       console.log("PlayerInteraction -> lancement d'une partie multi.");
       // initialise une nouvelle partie
-      let partieController = PartieControlleur(playerAlone, player);
-      playerAlone.state = PlayerControlleur.playing;
-      playerAlone.plateau = partieController;
-      player.state = PlayerControlleur.playing;
-      player.partie = partieController;
-      emitPlayer();
+      madeAMultiGame(playerAlone, player);
       playerAlone = null;
     } else {
       playerAlone = player;
@@ -105,6 +102,45 @@ function PlayerInteractionControlleur(server) {
   };
    
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////// request a match ////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  function requestMatch(playerCaller, playerId) {
+    console.log(`PlayerInteraction -> player${playerCaller.id} want a match with player${playerId}.`);
+    let playerFound = players.find((player) => player.id === playerId);
+    if (!playerFound) return;
+
+    playerFound.emit('player:requestMatch');
+    playerCaller.state = PlayerControlleur.waiting;
+    playerFound.state = PlayerControlleur.waiting;
+    emitPlayer();
+    playerFound.on('player:requestMatchAccept', () => {
+      console.log(`PlayerInteraction -> player${playerId} accepte the request of player${playerCaller.id}.`);
+      madeAMultiGame(playerCaller, playerFound);
+      unsubscribeRequestResponse()
+    })
+    playerFound.on('player:requestMatchReject', () => {
+      console.log(`PlayerInteraction -> player${playerId} reject the request of player${playerCaller.id}.`);
+      playerCaller.state = PlayerControlleur.available;
+      playerFound.state = PlayerControlleur.available;
+      emitPlayer();
+      unsubscribeRequestResponse()
+    })
+
+    function unsubscribeRequestResponse() {
+      playerFound.leave('player:requestMatchAccept');
+      playerFound.leave('player:requestMatchReject');
+    }
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////// function ///////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  function madeAMultiGame(player1, player2) {
+    let partieController = PartieControlleur(player1, player2);
+    player1.state = PlayerControlleur.playing;
+    player1.plateau = partieController;
+    player2.state = PlayerControlleur.playing;
+    player2.partie = partieController;
+    emitPlayer();
+  }
 }

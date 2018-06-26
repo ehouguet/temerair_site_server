@@ -82,7 +82,7 @@ function PartieControlleur(j1Player, J2Player) {
   function playerLeave(playerGotOut) {
     return players.filter((player) => {
       if (playerGotOut.id != player) {
-        player.emit('partie:exit', playerGotOut.id);
+        player.emit('partie:exit', playerGotOut.name);
         return true;
       }
       return false;

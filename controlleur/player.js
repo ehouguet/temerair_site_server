@@ -9,12 +9,15 @@ function PlayerControlleur(socket) {
     
     return {
         socket: socket,
-        id: 'Anomyne' + currentId++,
+        id: currentId++,
         name: '',
         state: '',
         plateau: null,
         emit(label, data) {
             socket.emit(label, data);
+        },
+        leave(label, data) {
+            socket.leave(label, data);
         },
         on(label, fun) {
             socket.on(label, fun);
