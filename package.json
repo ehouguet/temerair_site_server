@@ -4,7 +4,7 @@
   "description": "pour lancer l'application:",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha test/**/**.spec.js",
     "start": "node server.js"
   },
   "author": "",
@@ -12,5 +12,9 @@
   "dependencies": {
     "express": "^4.16.3",
     "socket.io": "^2.0.4"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
   }
 }

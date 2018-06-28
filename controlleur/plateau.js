@@ -10,14 +10,14 @@ function PlateauControlleur(sockets) {
   var instance = {}
 
   //composant de l'object
-  instance.get_data = fun_get_data;
+  instance.get_data = fun_get_plateau_state;
   instance.fin_tour = fun_fin_tour;
   instance.traitement_dependent_des_piece = fun_traitement_dependent_des_piece;
   instance.recrutement = fun_recrutement;
 
   //variable
   //contien les donnees
-  var data = get_data_default();
+  instance.plateauStates = get_plateau_state_default();
 
   emit('partie:start');
 
@@ -31,8 +31,8 @@ function PlateauControlleur(sockets) {
   }
 
   // focntion de l'object
-  function fun_get_data() {
-    return data;
+  function fun_get_plateau_state() {
+    return instance.plateauStates;
   }
 
   function fun_fin_tour() {
@@ -42,20 +42,20 @@ function PlateauControlleur(sockets) {
     console.log('cond de victoire : ');
     console.log(get_info_player().winArea.length >= 2);
     if (get_info_player().winArea.length >= 2) {
-      if (data.isTurnOfP1) {
+      if (instance.plateauStates.isTurnOfP1) {
         console.log('demande serveur: victoire p1.');
         emit('plateau:victoire', 'p1');
       } else {
         console.log('demande serveur: victoire p2.');
         emit('plateau:victoire', 'p2');
       }
-      data = get_data_default();
+      instance.plateauStates = get_plateau_state_default();
     } else {
-      data.isTurnOfP1 = !data.isTurnOfP1;
+      instance.plateauStates.isTurnOfP1 = !instance.plateauStates.isTurnOfP1;
     }
 
     console.log('demande serveur: init.');
-    emit('plateau:reset', data);
+    emit('plateau:reset', instance.plateauStates);
 
   }
 
@@ -365,13 +365,13 @@ function PlateauControlleur(sockets) {
     var plateauarea;
     switch (area) {
       case "ta":
-        plateauarea = data.plateauAir;
+        plateauarea = instance.plateauStates.plateauAir;
         break;
       case "tt":
-        plateauarea = data.plateauTerre;
+        plateauarea = instance.plateauStates.plateauTerre;
         break;
       case "tm":
-        plateauarea = data.plateauMer;
+        plateauarea = instance.plateauStates.plateauMer;
         break;
     }
 
@@ -407,13 +407,13 @@ function PlateauControlleur(sockets) {
     var res;
     switch (cellRecu.area) {
       case "ta":
-        res = data.plateauAir[cellRecu.posY][cellRecu.posX];
+        res = instance.plateauStates.plateauAir[cellRecu.posY][cellRecu.posX];
         break;
       case "tt":
-        res = data.plateauTerre[cellRecu.posY][cellRecu.posX];
+        res = instance.plateauStates.plateauTerre[cellRecu.posY][cellRecu.posX];
         break;
       case "tm":
-        res = data.plateauMer[cellRecu.posY][cellRecu.posX-4];
+        res = instance.plateauStates.plateauMer[cellRecu.posY][cellRecu.posX-4];
         break;
     }
     if (res == undefined) {
@@ -500,8 +500,8 @@ function PlateauControlleur(sockets) {
   }
 
   function fun_is_allier(piece) {
-    return (   ((data.isTurnOfP1) && (piece.player == "p1"))
-        || ((!data.isTurnOfP1) && (piece.player == "p2")));
+    return (   ((instance.plateauStates.isTurnOfP1) && (piece.player == "p1"))
+        || ((!instance.plateauStates.isTurnOfP1) && (piece.player == "p2")));
   }
 
   function fun_have_allier(cell) {
@@ -511,7 +511,7 @@ function PlateauControlleur(sockets) {
     return fun_is_allier(cell.piece);
   }
 
-  function get_data_default() {
+  function get_plateau_state_default() {
     return {
       // air inversé
       plateauAir: [
@@ -577,10 +577,10 @@ function PlateauControlleur(sockets) {
 
   function get_info_player(){
     var reserve = [];
-    if (data.isTurnOfP1) {
-      reserve = data.p1;
+    if (instance.plateauStates.isTurnOfP1) {
+      reserve = instance.plateauStates.p1;
     } else {
-      reserve = data.p2;
+      reserve = instance.plateauStates.p2;
     }
     return reserve;
   }
