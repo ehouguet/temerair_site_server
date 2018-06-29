@@ -20,7 +20,15 @@ function getPlateauStateP2WithPiece(cells) {
 function getPlateauStateWithPiece(cells) {
     let plateauSate = getPlateauStateEmpty();
     cells.forEach((cell) => {
-        plateauSate[areaIdToArea[cell.area]][cell.posY][cell.posX] = cell;
+        switch (cell.area) {
+            case "ta":
+            case "tt":
+                plateauSate[areaIdToArea[cell.area]][cell.posY][cell.posX] = cell;
+            break;
+            case "tm":
+                plateauSate[areaIdToArea[cell.area]][cell.posY][cell.posX-4] = cell;
+            break;
+        }
     })
     return plateauSate;
 }
