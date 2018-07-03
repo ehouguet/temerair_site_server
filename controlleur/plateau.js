@@ -276,6 +276,15 @@ function PlateauControlleur(sockets) {
       return;
     }
 
+    /* manger au dessus */
+    if (cell_A.posX === cell_ori.posX && cell_A.posX === cell_ori.posX) {
+      if (!fun_have_allier(cell_B)) {
+        fun_mange(cell_B);
+        fun_fin_tour();
+        return;
+      }
+    }
+
     /* control du mange au meme etage */
     if (fun_have_allier(cell_A)) {
       console.log("server.js => fun_action_A_B: echec: deplacer sur un allier");

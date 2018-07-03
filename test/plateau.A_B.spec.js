@@ -82,8 +82,25 @@ describe('plateau', () => {
       ]);
       expect(plateauControlleur.plateauStates).to.deep.equal(plateauStatesVoulu)
     })
+    
+    it('move 1 top right on sea', () => {
+      // init plateau
+      plateauControlleur.plateauStates = plateauTestUtils.getPlateauStateWithPiece([
+        {area:"tm",posY:6,posX:5,piece:{player:"p1", type:"A_B"}}
+      ]);
+      // action
+      plateauControlleur.traitement_dependent_des_piece(
+        {area:"tm",posY:6,posX:5,piece:{player:"p1", type:"A_B"}},
+        {area:"tm",posY:5,posX:6,piece:null}
+      );
+      // test plateau
+      let plateauStatesVoulu = plateauTestUtils.getPlateauStateP2WithPiece([
+        {area:"tm",posY:5,posX:6,piece:{player:"p1", type:"A_B"}}
+      ]);
+      expect(plateauControlleur.plateauStates).to.deep.equal(plateauStatesVoulu)
+    })
 
-    ////////////////////////////: specifique move ////////////////////////////
+    //////////////////////////// specifique move ////////////////////////////
 
     it("don't move on others piece", () => {
       // init plateau
@@ -154,6 +171,24 @@ describe('plateau', () => {
       // test plateau
       let plateauStatesVoulu = plateauTestUtils.getPlateauStateP2WithPiece([
         {area:"tt",posY:4,posX:0,piece:{player:"p1", type:"A_B"}}
+      ]);
+      expect(plateauControlleur.plateauStates).to.deep.equal(plateauStatesVoulu)
+    })
+    
+    it("eat a piece without move on sea", () => {
+      // init plateau
+      plateauControlleur.plateauStates = plateauTestUtils.getPlateauStateWithPiece([
+        {area:"tm",posY:2,posX:6,piece:{player:"p1", type:"A_B"}},
+        {area:"ta",posY:2,posX:0,piece:{player:"p2", type:"A_B"}}
+      ]);
+      // action
+      plateauControlleur.traitement_dependent_des_piece(
+        {area:"tm",posY:2,posX:6,piece:{player:"p1", type:"A_B"}},
+        {area:"ta",posY:2,posX:0,piece:{player:"p2", type:"A_B"}}
+      );
+      // test plateau
+      let plateauStatesVoulu = plateauTestUtils.getPlateauStateP2WithPiece([
+        {area:"tm",posY:2,posX:6,piece:{player:"p1", type:"A_B"}}
       ]);
       expect(plateauControlleur.plateauStates).to.deep.equal(plateauStatesVoulu)
     })
