@@ -41,6 +41,7 @@ function PlateauControlleur(sockets) {
     console.log(get_info_player().winArea);
     console.log('cond de victoire : ');
     console.log(get_info_player().winArea.length >= 2);
+
     if (get_info_player().winArea.length >= 2) {
       if (instance.plateauStates.isTurnOfP1) {
         console.log('demande serveur: victoire p1.');
@@ -49,31 +50,34 @@ function PlateauControlleur(sockets) {
         console.log('demande serveur: victoire p2.');
         emit('plateau:victoire', 'p2');
       }
-      instance.plateauStates = get_plateau_state_default();
-    } else {
-      instance.plateauStates.isTurnOfP1 = !instance.plateauStates.isTurnOfP1;
     }
 
+    instance.plateauStates.isTurnOfP1 = !instance.plateauStates.isTurnOfP1;
+    
     console.log('demande serveur: init.');
     emit('plateau:reset', instance.plateauStates);
 
   }
 
   function fun_recrutement(piece_recu, cell_dest_recu) {
+    console.log("server.js => fun_recrutement: piece_recu:");
+    console.log(piece_recu);
+    console.log("server.js => fun_recrutement: cell_dest_recu:");
+    console.log(cell_dest_recu);
+
     var cell_dest = get_cell_local(cell_dest_recu);
     var reserve = get_info_player().toPut;
-
+ 
     // control sur la possession de la piece.
-    var i = reserve.length - 1;
-    var bool = true;
-    while ((i >= 0) && (bool)) {
-      if (reserve[i].type == piece_recu.type) {
-        reserve.splice(i, 1);
-        bool = false
+    var idxFound = reserve.length - 1;
+    var isNotInReserve = true;
+    while ((idxFound >= 0) && (isNotInReserve)) {
+      if (reserve[idxFound].type == piece_recu.type) {
+        isNotInReserve = false
       }
-      i--;
+      idxFound--;
     }
-    if (bool) {
+    if (isNotInReserve) {
       console.log('parachute d une piece non en reserve');
       return;
     }
@@ -84,14 +88,14 @@ function PlateauControlleur(sockets) {
       return;
     }
 
-    cell_dest_recu.posY = cell_dest.posY;
+    cell_dest_recu.posY = cell_dest.posY+1;
     cell_dest_recu.posX = cell_dest.posX;
     var cell_tmp = get_cell_local(cell_dest_recu);
     if (cell_tmp != null) {
       if (cell_tmp.piece != null) {
         if (cell_tmp.piece.type == "QG" && cell_tmp.piece.player == piece_recu.player) {
-          cell_dest.piece = piece_recu;
-          fun_fin_tour();
+          recrutementPutPiece()
+          return;
         }
       }
     }
@@ -101,8 +105,8 @@ function PlateauControlleur(sockets) {
     if (cell_tmp != null) {
       if (cell_tmp.piece != null) {
         if (cell_tmp.piece.type == "QG" && cell_tmp.piece.player == piece_recu.player) {
-          cell_dest.piece = piece_recu;
-          fun_fin_tour();
+          recrutementPutPiece()
+          return;
         }
       }
     }
@@ -112,8 +116,8 @@ function PlateauControlleur(sockets) {
     if (cell_tmp != null) {
       if (cell_tmp.piece != null) {
         if (cell_tmp.piece.type == "QG" && cell_tmp.piece.player == piece_recu.player) {
-          cell_dest.piece = piece_recu;
-          fun_fin_tour();
+          recrutementPutPiece()
+          return;
         }
       }
     }
@@ -123,12 +127,22 @@ function PlateauControlleur(sockets) {
     if (cell_tmp != null) {
       if (cell_tmp.piece != null) {
         if (cell_tmp.piece.type == "QG" && cell_tmp.piece.player == piece_recu.player) {
-          cell_dest.piece = piece_recu;
-          fun_fin_tour();
+          recrutementPutPiece();
+          return;
         }
       }
     }
+    
+    console.log('parachute une piece sur une case non adjacent à un QG');
+    return;
+
+    function recrutementPutPiece() {
+      cell_dest.piece = piece_recu;
+      reserve.splice(idxFound, 1);
+      fun_fin_tour();
+    }
   }
+
 
   function fun_traitement_dependent_des_piece(cell_ori_recu, cell_dest_recu) {
     //le cas de recrutement (cell_ori est une piece)

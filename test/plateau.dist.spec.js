@@ -15,7 +15,7 @@ describe('plateau', () => {
 
   describe('dist', () => {
 
-    it('move 2 down', () => {
+    it('move down', () => {
       // init plateau
       plateauControlleur.plateauStates = plateauTestUtils.getPlateauStateWithPiece([
         {area:"tt",posY:3,posX:2,piece:{player:"p1", type:"dist"}}
@@ -32,7 +32,7 @@ describe('plateau', () => {
       expect(plateauControlleur.plateauStates).to.deep.equal(plateauStatesVoulu)
     })
     
-    it('move 1 right', () => {
+    it('move right', () => {
       // init plateau
       plateauControlleur.plateauStates = plateauTestUtils.getPlateauStateWithPiece([
         {area:"tt",posY:3,posX:2,piece:{player:"p1", type:"dist"}}

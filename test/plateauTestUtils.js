@@ -3,6 +3,8 @@ module.exports = {
     getPlateauStateEmpty: getPlateauStateEmpty,
     getPlateauStateWithPiece: getPlateauStateWithPiece,
     getPlateauStateP2WithPiece: getPlateauStateP2WithPiece,
+    getPlateauStateP2V1WithPiece: getPlateauStateP2V1WithPiece,
+    getPlateauStateV1WithPiece: getPlateauStateV1WithPiece,
 }
 
 const areaIdToArea = {
@@ -11,13 +13,26 @@ const areaIdToArea = {
     tm: 'plateauMer',
 }
 
-function getPlateauStateP2WithPiece(cells) {
-    let plateauSate = getPlateauStateWithPiece(cells);
+function getPlateauStateP2V1WithPiece(cells, toPutJ1, areas) {
+    let plateauSate = getPlateauStateWithPiece(cells, toPutJ1);
+    plateauSate.isTurnOfP1 = false;
+    plateauSate.p1.winArea = areas;
+    return plateauSate;
+}
+
+function getPlateauStateP2WithPiece(cells, toPutJ1) {
+    let plateauSate = getPlateauStateWithPiece(cells, toPutJ1);
     plateauSate.isTurnOfP1 = false;
     return plateauSate;
 }
 
-function getPlateauStateWithPiece(cells) {
+function getPlateauStateV1WithPiece(cells, toPutJ1, areas) {
+    let plateauSate = getPlateauStateWithPiece(cells, toPutJ1);
+    plateauSate.p1.winArea = areas;
+    return plateauSate;
+}
+
+function getPlateauStateWithPiece(cells, toPutJ1 = []) {
     let plateauSate = getPlateauStateEmpty();
     cells.forEach((cell) => {
         switch (cell.area) {
@@ -29,7 +44,8 @@ function getPlateauStateWithPiece(cells) {
                 plateauSate[areaIdToArea[cell.area]][cell.posY][cell.posX-4] = cell;
             break;
         }
-    })
+    });
+    plateauSate.p1.toPut = toPutJ1;
     return plateauSate;
 }
 
